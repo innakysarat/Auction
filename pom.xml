@@ -14,7 +14,7 @@
 	<name>auction</name>
 	<description>Auction</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>18</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -102,17 +102,17 @@
 			<plugin>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-maven-plugin</artifactId>
-<!--				    <version>${project.parent.version}</version>-->
-<!--					<executions>-->
-<!--						<execution>-->
-<!--							<goals>-->
-<!--								<goal>build-info</goal>-->
-<!--							</goals>-->
-<!--						</execution>-->
-<!--					</executions>-->
-<!--					<configuration>-->
-<!--						<mainClass>com.coursework.auction.auction.AuctionApplication.java</mainClass>-->
-<!--					</configuration>-->
+				    <version>${project.parent.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>build-info</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<mainClass>auction.AuctionApplication</mainClass>
+					</configuration>
 			</plugin>
 		</plugins>
 	</build>
