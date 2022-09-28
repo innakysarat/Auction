@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity(name = "Advert")
 @Table(
@@ -19,10 +20,10 @@ public class Advert {
     @Column(
             updatable = false
     )
-    private long advertId;
+    private long id;
 
     @Column
-    private String name;
+    private String title;
 
     @Column
     private String location;
@@ -31,26 +32,24 @@ public class Advert {
     @Column
     private String advertImageLink;
 
-    // зачем хранить инфу про объявление??
-//    @OneToMany(mappedBy = "advert")
-//    Set<BuyerAdvert> prices;
+    @Column
+    private Long rating;
 
+    @Column
+    private Long price;
+
+    @Column
+    private String category;
+
+    @Column
+    private Date end_date;
+
+    @Column
+    private Date extension_period;
+    @Column
+    private String hash_image;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User seller;
-
-    public Advert(String name, String location, String description, String advertImageLink) {
-        this.name = name;
-        this.location = location;
-        this.description = description;
-        this.advertImageLink = advertImageLink;
-    }
-
-//    public BuyerAdvert addBuyersPrice(User buyer, BuyerAdvert newPrice){
-//        //BuyerAdvert newPrice = new BuyerAdvert(buyer, this, price);
-//        prices.add(newPrice);
-//        buyer.getBuyers_adverts().add(newPrice);
-//        return newPrice;
-//    }
 
 }

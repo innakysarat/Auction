@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 // this class validates credentials
 public class UsernameAndPasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -72,8 +74,7 @@ public class UsernameAndPasswordAuthFilter extends UsernamePasswordAuthenticatio
                 .signWith(secretKey) // sign a token - 3 часть токена
                 .compact(); // compacting into its final String form
         // a signed JWT is called 'JWS'
-
-        //response.setHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+        // response.setHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
         // add a token to a response header
         //response.addHeader("Authorization", "Bearer " + token);
         response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);

@@ -60,50 +60,57 @@ public class UserService implements UserDetailsService {
         return newField != null && newField.length() > 0 && !Objects.equals(prevField, newField);
     }
 
-    public ResponseEntity<User> updateUser(Long userId, User userUpdated) {
+    public ResponseEntity<User> updateUser(String username, Long userId, User userUpdated) {
         User userPrevious = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        if (primaryCheckUpdate(userUpdated.getUsername(), userPrevious.getUsername())){
-            Optional<User> userByUsername = userRepository.findByUsername(userUpdated.getUsername());
-            if (userByUsername.isPresent()){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, USERNAME_IS_TAKEN
-                );
+        if (Objects.equals(username, userPrevious.getUsername())) {
+            if (primaryCheckUpdate(userUpdated.getUsername(), userPrevious.getUsername())) {
+                Optional<User> userByUsername = userRepository.findByUsername(userUpdated.getUsername());
+                if (userByUsername.isPresent()) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST, USERNAME_IS_TAKEN
+                    );
+                }
+                userPrevious.setUsername(userUpdated.getUsername());
             }
-            userPrevious.setUsername(userUpdated.getUsername());
-        }
-        if (primaryCheckUpdate(userUpdated.getFirstName(), userPrevious.getFirstName())) {
-            userPrevious.setFirstName(userUpdated.getFirstName());
-        }
-        if (primaryCheckUpdate(userUpdated.getLastName(), userPrevious.getLastName())) {
-            userPrevious.setLastName(userUpdated.getLastName());
-        }
-        if (primaryCheckUpdate(userUpdated.getEmail(), userPrevious.getEmail())) {
-            User userByEmail
-                    = userRepository.findByEmail(userUpdated.getEmail());
-            if (userByEmail != null) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Email is taken"
-                );
+            if (primaryCheckUpdate(userUpdated.getFirstName(), userPrevious.getFirstName())) {
+                userPrevious.setFirstName(userUpdated.getFirstName());
             }
-            userPrevious.setEmail(userUpdated.getEmail());
-        }
-        if (primaryCheckUpdate(userUpdated.getPhoneNumber(), userPrevious.getPhoneNumber())) {
-            User userByPhone = userRepository.findByPhoneNumber(userUpdated.getPhoneNumber());
-            if (userByPhone != null) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Phone number is taken"
-                );
+            if (primaryCheckUpdate(userUpdated.getLastName(), userPrevious.getLastName())) {
+                userPrevious.setLastName(userUpdated.getLastName());
             }
-            userPrevious.setPhoneNumber(userUpdated.getPhoneNumber());
+            if (primaryCheckUpdate(userUpdated.getEmail(), userPrevious.getEmail())) {
+                User userByEmail
+                        = userRepository.findByEmail(userUpdated.getEmail());
+                if (userByEmail != null) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST, "Email is taken"
+                    );
+                }
+                userPrevious.setEmail(userUpdated.getEmail());
+            }
+            if (primaryCheckUpdate(userUpdated.getPhoneNumber(), userPrevious.getPhoneNumber())) {
+                User userByPhone = userRepository.findByPhoneNumber(userUpdated.getPhoneNumber());
+                if (userByPhone != null) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST, "Phone number is taken"
+                    );
+                }
+                userPrevious.setPhoneNumber(userUpdated.getPhoneNumber());
+            }
+            if (primaryCheckUpdate(userUpdated.getLocation(), userPrevious.getLocation())) {
+                userPrevious.setLocation(userUpdated.getLocation());
+            }
+            if (primaryCheckUpdate(userUpdated.getUserImageLink(), userPrevious.getUserImageLink())){
+                userPrevious.setUserImageLink(userUpdated.getUserImageLink());
+            }
+            return ResponseEntity.ok(userRepository.save(userPrevious));
         }
-        if (primaryCheckUpdate(userUpdated.getLocation(), userPrevious.getLocation())) {
-            userPrevious.setLocation(userUpdated.getLocation());
+        else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Another user cannot update someone's else info");
         }
-        return ResponseEntity.ok(this.userRepository.save(userPrevious));
 
     }
-    //public void offerPrice(Double price, )
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
@@ -122,11 +129,6 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), password, UserRole.BUYER.getGrantedAuthorities());
     }
 
-//    public Set<BuyerAdvert> getBuyersAdverts(Long userId) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//        return user.getBuyers_adverts();
-//    }
     public Set<Advert> getSellersAdverts(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -134,5 +136,17 @@ public class UserService implements UserDetailsService {
     }
     public List<BuyerAdvert> getBuyersAdverts(Long buyer_id) {
         return advertPricesRepository.findAllByBuyerId(buyer_id);
+    }
+
+    public void deleteUser(Long id) {
+        boolean exists = userRepository.existsById(id);
+        if (exists){
+            userRepository.deleteById(id);
+        }
+        else{
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found"
+            );
+        }
     }
 }

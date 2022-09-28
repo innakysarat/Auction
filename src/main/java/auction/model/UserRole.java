@@ -9,9 +9,9 @@ import com.google.common.collect.Sets;
 import static auction.model.UserPermission.*;
 
 public enum UserRole {
-    BUYER(Sets.newHashSet(ADVERT_READ)),
-    SELLER(Sets.newHashSet(ADVERT_READ, ADVERT_ADD, ADVERT_EDIT)),
-    ADMIN(Sets.newHashSet(ADVERT_READ));
+    BUYER(Sets.newHashSet(ADVERT_READ, ADD_PRICE)),
+    SELLER(Sets.newHashSet(ADVERT_READ, ADVERT_ADD, ADVERT_EDIT, ADVERT_DELETE)),
+    ADMIN(Sets.newHashSet(ADVERT_READ, ADVERT_ADD, ADVERT_EDIT, ADVERT_DELETE, ADMIN_PERMISSION));
     private final Set<UserPermission> permissions;
 
     UserRole(Set<UserPermission> permissions) {

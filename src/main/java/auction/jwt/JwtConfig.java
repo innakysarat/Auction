@@ -3,8 +3,7 @@ package auction.jwt;
 import lombok.NoArgsConstructor;
 import com.google.common.net.HttpHeaders;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.context.annotation.Bean;
+
 
 @NoArgsConstructor
 @ConfigurationProperties(prefix = "application.jwt")

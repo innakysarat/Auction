@@ -24,7 +24,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-//@EqualsAndHashCode
 public class User implements UserDetails {
 
     public User(String username, String password, String firstName, String lastName, String email, String phoneNumber, String role, String userImageLink) {
@@ -71,27 +70,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Advert> sellers_adverts = new HashSet<>();
 
-//    @JsonIgnore
-//    buyer's adverts for which he offered a price
-//    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private final Set<BuyerAdvert> buyers_adverts = new HashSet<>();
-
     public void addSellersAdvert(Advert advert){
         sellers_adverts.add(advert);
     }
 
+    @JsonIgnore
     @Transient
     private Boolean locked = false;
+    @JsonIgnore
     @Transient
     private Boolean enabled = false;
+    @JsonIgnore
     @Transient
     private Set<? extends GrantedAuthority> grantedAuthorities;
-    // @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        SimpleGrantedAuthority authority =
-//                new SimpleGrantedAuthority(userRole.name());
-//        return Collections.singletonList(authority);
-//    }
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -132,8 +123,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
-    // list of adverts for seller
-    // list of adverts for buyer
-    // favourite list of adverts for buyer
 }
